@@ -1,13 +1,10 @@
 
-
-
 import { useParams } from "react-router-dom";
-
 import MainLayout from "../../layouts/MainLayout";
-
 import PatientDetailsCard from "./components/PatientDetailsCard";
-
 import patientData from "./data/patientData";
+
+
 
 function ViewPatient() {
   const { id } = useParams();

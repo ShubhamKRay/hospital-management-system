@@ -14,6 +14,14 @@ import {
   TextField,
   InputAdornment,
   Box,
+
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+
 } from "@mui/material";
 
 import {
@@ -25,16 +33,55 @@ import {
 
 import patientData from "../data/patientData";
 
+
+
+
+
 function PatientTable() {
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
 
-  const filteredPatients = patientData.filter((patient) =>
-    patient.name.toLowerCase().includes(search.toLowerCase())
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const [selectedPatient, setSelectedPatient] = useState(null);
+
+  const [patients, setPatients] = useState(patientData);
+
+ const filteredPatients = patients.filter((patient) =>
+  patient.name.toLowerCase().includes(search.toLowerCase())
+);
+
+
+
+   const handleDeleteClick = (patient) => {
+   setSelectedPatient(patient);
+   setOpenDialog(true);
+   };
+
+  const handleCloseDialog = () => {
+  setOpenDialog(false);
+  setSelectedPatient(null);
+ };
+
+   const handleDeletePatient = () => {
+   const updatedPatients = patients.filter(
+    (patient) => patient.id !== selectedPatient.id
   );
 
+  setPatients(updatedPatients);
+
+  handleCloseDialog();
+};
+
+
+
+
+
   return (
+
+    <>
+
     <Paper
       elevation={3}
       sx={{
@@ -129,15 +176,11 @@ function PatientTable() {
                   </IconButton>
 
                   <IconButton
-                    color="error"
-                    onClick={() =>
-                      alert(
-                        `Delete Patient: ${patient.name}\n\n(Delete functionality will be implemented later.)`
-                      )
-                    }
-                  >
-                    <Delete />
-                  </IconButton>
+                      color="error"
+                      onClick={() => handleDeleteClick(patient)}
+                   >
+                     <Delete />
+                    </IconButton>
 
                 </TableCell>
 
@@ -157,6 +200,57 @@ function PatientTable() {
         </Table>
       </TableContainer>
     </Paper>
+
+
+<Dialog
+  open={openDialog}
+  onClose={handleCloseDialog}
+>
+
+  <DialogTitle>
+    Delete Patient
+  </DialogTitle>
+
+  <DialogContent>
+
+    <DialogContentText>
+
+      Are you sure you want to delete
+
+      <strong>
+        {" "}
+        {selectedPatient?.name}
+        {" "}
+      </strong>
+
+      ?
+
+    </DialogContentText>
+
+  </DialogContent>
+
+  <DialogActions>
+
+    <Button
+      onClick={handleCloseDialog}
+    >
+      Cancel
+    </Button>
+
+    <Button
+      color="error"
+      variant="contained"
+      onClick={handleDeletePatient}
+    >
+      Delete
+    </Button>
+
+  </DialogActions>
+
+</Dialog>
+
+</>
+
   );
 }
 
