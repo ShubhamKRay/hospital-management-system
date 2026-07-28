@@ -1,5 +1,19 @@
-import {Paper,Typography,Grid,TextField,MenuItem,Button,Divider,Box,} from "@mui/material";
+import {
+  Paper,
+  Typography,
+  Grid,
+  TextField,
+  MenuItem,
+  Button,
+  Divider,
+  Box,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+
+
 
 
 const genders = ["Male", "Female", "Other"];
@@ -31,11 +45,27 @@ const doctors = [
 
 function PatientForm({ patient, mode = "add" }) {
 
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit,  formState: { errors }, } = useForm();
 
-    const onSubmit = (data) => {
-     console.log(data);
-   };
+    const [snackbar, setSnackbar] = useState({
+            open:false,
+            message:"",
+            severity:"success",
+        });
+
+
+
+  const onSubmit = (data) => {
+
+  console.log("Patient Data:", data);
+
+  setSnackbar({
+    open:true,
+    message:"Patient added successfully",
+    severity:"success",
+  });
+
+};
 
   return (
     <Paper sx={{ p: 4, borderRadius: 3 }}>
@@ -55,23 +85,70 @@ function PatientForm({ patient, mode = "add" }) {
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 6 }}>
+
+        <TextField
+           fullWidth
+            label="First Name"
+        {...register("firstName", {
+             required: "First name is required",
+             minLength: {
+             value: 3,
+             message: "Minimum 3 characters required",
+        },
+        })}
+         error={!!errors.firstName}
+         helperText={errors.firstName?.message}
+      />
+    </Grid>
+
+    <Grid size={{ xs: 12, md: 6 }}>
+        <TextField
+           fullWidth
+           label="Last Name"
+           {...register("lastName", {
+            required: "Last name is required",
+            })}
+              error={!!errors.lastName}
+              helperText={errors.lastName?.message}
+        />
+        </Grid>
+
+    <Grid size={{ xs: 12, md: 6 }}>
+        <TextField
+            fullWidth
+            type="number"
+            label="Age"
+            {...register("age", {
+            required: "Age is required",
+            min: {
+            value: 1,
+            message: "Age must be greater than 0",
+         },
+          max: {
+          value: 120,
+          message: "Age must be less than 120",
+          },
+        })}
+        error={!!errors.age}
+         helperText={errors.age?.message}
+    />
+</Grid>
+
+
+
+
+        <Grid size={{ xs: 12, md: 6 }}>
           <TextField
-               fullWidth
-               label="First Name"
-           {...register("firstName")}
-            />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6 }}>
-          <TextField fullWidth label="Last Name" />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6 }}>
-          <TextField fullWidth type="number" label="Age" />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6 }}>
-          <TextField select fullWidth label="Gender">
+            select
+             fullWidth
+             label="Gender"
+              defaultValue=""
+             {...register("gender", {
+             required: "Gender is required",
+             })}
+            error={!!errors.gender}
+            helperText={errors.gender?.message}
+       >
             {genders.map((gender) => (
               <MenuItem key={gender} value={gender}>
                 {gender}
@@ -90,13 +167,38 @@ function PatientForm({ patient, mode = "add" }) {
           </TextField>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6 }}>
-          <TextField fullWidth label="Mobile Number" />
-        </Grid>
+    <Grid size={{ xs: 12, md: 6 }}>
+        <TextField
+           fullWidth
+           label="Mobile Number"
+            {...register("mobile", {
+            required: "Mobile number is required",
+            pattern: {
+            value: /^[0-9]{10}$/,
+            message: "Enter valid 10 digit mobile number",
+          },
+       })}
+       error={!!errors.mobile}
+       helperText={errors.mobile?.message}
+    />
+</Grid>
 
-        <Grid size={{ xs: 12 }}>
-          <TextField fullWidth label="Email Address" />
-        </Grid>
+
+
+    <Grid size={{ xs: 12 }}>
+          <TextField
+               fullWidth
+               label="Email Address"
+               {...register("email", {
+                pattern: {
+                value: /^\S+@\S+\.\S+$/,
+                message: "Enter valid email address",
+              },
+         })}
+             error={!!errors.email}
+             helperText={errors.email?.message}
+        />
+    </Grid>
 
         <Grid size={{ xs: 12 }}>
           <TextField
@@ -116,8 +218,16 @@ function PatientForm({ patient, mode = "add" }) {
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 6 }}>
-          <TextField fullWidth label="Disease" />
-        </Grid>
+          <TextField
+                fullWidth
+                label="Disease"
+               {...register("disease", {
+                required: "Disease is required",
+            })}
+         error={!!errors.disease}
+         helperText={errors.disease?.message}
+        />
+    </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
           <TextField select fullWidth label="Department">
@@ -141,12 +251,17 @@ function PatientForm({ patient, mode = "add" }) {
 
         <Grid size={{ xs: 12, md: 6 }}>
           <TextField
-            fullWidth
-            type="date"
-            label="Admission Date"
-            InputLabelProps={{ shrink: true }}
-          />
-        </Grid>
+               fullWidth
+               type="date"
+               label="Admission Date"
+               InputLabelProps={{ shrink: true }}
+              {...register("admissionDate", {
+              required: "Admission date is required",
+           })}
+                error={!!errors.admissionDate}
+                helperText={errors.admissionDate?.message}
+           />
+    </Grid>
 
         <Grid size={{ xs: 12 }}>
           <TextField select fullWidth label="Status">
@@ -163,9 +278,12 @@ function PatientForm({ patient, mode = "add" }) {
         justifyContent="flex-end"
         gap={2}
       >
-        <Button variant="outlined">
-          Cancel
-        </Button>
+    <Button
+          variant="outlined"
+          onClick={() => window.history.back()}
+    >
+        Cancel
+    </Button>
 
         <Button
             type="submit"
@@ -176,9 +294,32 @@ function PatientForm({ patient, mode = "add" }) {
       </Box>
 
 
-
-
    </form>
+
+<Snackbar
+  open={snackbar.open}
+  autoHideDuration={3000}
+  onClose={() =>
+    setSnackbar({
+      ...snackbar,
+      open:false,
+    })
+  }
+  anchorOrigin={{
+    vertical:"bottom",
+    horizontal:"right",
+  }}
+>
+  <Alert
+    severity={snackbar.severity}
+    variant="filled"
+  >
+    {snackbar.message}
+  </Alert>
+
+</Snackbar>
+
+
     </Paper>
   );
 }
