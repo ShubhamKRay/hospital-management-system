@@ -1,49 +1,59 @@
-import { Dashboard,People,Person,Event,Apartment,LocalHospital,Medication,ReceiptLong,Settings,} from "@mui/icons-material";
+import {
+  Dashboard,
+  People,
+  Person,
+  Event,
+  Apartment,
+  LocalHospital,
+  Medication,
+  ReceiptLong,
+  Settings,
+} from "@mui/icons-material";
 
 const menuItems = [
   {
     title: "Dashboard",
-    icon: <Dashboard />,
+    icon: Dashboard,
     path: "/",
   },
   {
     title: "Patients",
-    icon: <People />,
+    icon: People,
     path: "/patients",
   },
   {
     title: "Doctors",
-    icon: <Person />,
+    icon: Person,
     path: "/doctors",
   },
   {
     title: "Appointments",
-    icon: <Event />,
+    icon: Event,
     path: "/appointments",
   },
   {
     title: "Departments",
-    icon: <Apartment />,
+    icon: Apartment,
     path: "/departments",
   },
   {
     title: "Laboratory",
-    icon: <LocalHospital />,
+    icon: LocalHospital,
     path: "/laboratory",
   },
   {
     title: "Pharmacy",
-    icon: <Medication />,
+    icon: Medication,
     path: "/pharmacy",
   },
   {
     title: "Billing",
-    icon: <ReceiptLong />,
+    icon: ReceiptLong,
     path: "/billing",
   },
   {
     title: "Settings",
-    icon: <Settings />,
+    icon: Settings,
     path: "/settings",
   },
 ];

@@ -1,18 +1,22 @@
 
 
+
+import { AppBar, Toolbar, Typography } from "@mui/material";
+
 function Navbar() {
   return (
-    <div
-      style={{
-        backgroundColor: "#1976d2",
-        color: "white",
-        padding: "15px 20px",
-        fontSize: "22px",
-        fontWeight: "bold",
+    <AppBar
+      position="fixed"
+      sx={{
+        zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
-      Hospital Management System
-    </div>
+      <Toolbar>
+        <Typography variant="h6">
+          Hospital Management System
+        </Typography>
+      </Toolbar>
+    </AppBar>
   );
 }
 

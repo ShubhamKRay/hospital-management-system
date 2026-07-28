@@ -1,24 +1,57 @@
 
 
+
+import {
+  Drawer,
+  Toolbar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+
+import { NavLink } from "react-router-dom";
+import menuItems from "./menuItems";
+
+const drawerWidth = 250;
+
 function Sidebar() {
   return (
-    <div
-      style={{
-        width: "240px",
-        minHeight: "100vh",
-        background: "#F4F6F8",
-        padding: "20px",
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: drawerWidth,
+          boxSizing: "border-box",
+        },
       }}
     >
-      <h3>Menu</h3>
+      <Toolbar />
 
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        <li>Dashboard</li>
-        <li>Patients</li>
-        <li>Doctors</li>
-        <li>Appointments</li>
-      </ul>
-    </div>
+      <List>
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <ListItem key={item.title} disablePadding>
+              <ListItemButton
+                component={NavLink}
+                to={item.path}
+              >
+                <ListItemIcon>
+                  <Icon />
+                </ListItemIcon>
+
+                <ListItemText primary={item.title} />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
+      </List>
+    </Drawer>
   );
 }
 
