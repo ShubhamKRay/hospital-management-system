@@ -1,11 +1,14 @@
 
 
+import MainLayout from "../../layouts/MainLayout";
+
 function Dashboard() {
   return (
-    <div>
+    <MainLayout>
       <h1>Dashboard</h1>
+
       <p>Welcome to Hospital Management System</p>
-    </div>
+    </MainLayout>
   );
 }
 
