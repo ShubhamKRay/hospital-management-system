@@ -28,7 +28,7 @@ const appointments = [
   },
   {
     id: 3,
-    patient: "Piyush",
+    patient: "Piyush Raut",
     doctor: "Dr. Raj",
     time: "11:00 AM",
     status: "Pending",

@@ -22,7 +22,7 @@ const patients = [
   },
   {
     id: 3,
-    name: "Piyush",
+    name: "Piyush Raut",
     disease: "Fracture",
   },
 ];
