@@ -3,9 +3,6 @@
 import MainLayout from "../../layouts/MainLayout";
 import DashboardHeader from "./components/DashboardHeader";
 import DashboardCards from "./components/DashboardCards";
-import StatisticsChart from "./components/StatisticsChart";
-import AppointmentTable from "./components/AppointmentTable";
-import RecentPatients from "./components/RecentPatients";
 
 function Dashboard() {
   return (
@@ -13,12 +10,6 @@ function Dashboard() {
       <DashboardHeader />
 
       <DashboardCards />
-
-      <StatisticsChart />
-
-      <AppointmentTable />
-
-      <RecentPatients />
     </MainLayout>
   );
 }
