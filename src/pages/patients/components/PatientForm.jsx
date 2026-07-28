@@ -293,7 +293,6 @@ function PatientForm({ patient, mode = "add" }) {
         </Button>
       </Box>
 
-
    </form>
 
 <Snackbar
@@ -318,7 +317,6 @@ function PatientForm({ patient, mode = "add" }) {
   </Alert>
 
 </Snackbar>
-
 
     </Paper>
   );

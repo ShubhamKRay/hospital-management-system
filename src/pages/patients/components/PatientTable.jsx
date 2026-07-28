@@ -135,7 +135,6 @@ const sortedPatients = [...filteredPatients].sort((a, b) => {
 
 
 
-
  const handleDeletePatient = () => {
   const updatedPatients = patients.filter(
     (patient) => patient.id !== selectedPatient.id
@@ -151,9 +150,6 @@ const sortedPatients = [...filteredPatients].sort((a, b) => {
 
   handleCloseDialog();
 };
-
-
-
 
 
   return (
