@@ -21,6 +21,10 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  Snackbar,
+  Alert,
+  TablePagination,
+  MenuItem,
 
 } from "@mui/material";
 
@@ -38,19 +42,56 @@ import patientData from "../data/patientData";
 
 
 function PatientTable() {
+
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
+
+  const [genderFilter, setGenderFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [doctorFilter, setDoctorFilter] = useState("");
+
 
   const [openDialog, setOpenDialog] = useState(false);
 
   const [selectedPatient, setSelectedPatient] = useState(null);
 
+  const [snackbar, setSnackbar] = useState({
+         open: false,
+         message: "",
+         severity: "success",
+   });
+
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const [patients, setPatients] = useState(patientData);
 
- const filteredPatients = patients.filter((patient) =>
-  patient.name.toLowerCase().includes(search.toLowerCase())
-);
+  const filteredPatients = patients.filter((patient) => {
+  const matchSearch = patient.name
+    .toLowerCase()
+    .includes(search.toLowerCase());
+
+  const matchGender =
+    genderFilter === "" ||
+    patient.gender === genderFilter;
+
+  const matchStatus =
+    statusFilter === "" ||
+    patient.status === statusFilter;
+
+  const matchDoctor =
+    doctorFilter === "" ||
+    patient.doctor === doctorFilter;
+
+  return (
+    matchSearch &&
+    matchGender &&
+    matchStatus &&
+    matchDoctor
+  );
+});
 
 
 
@@ -64,12 +105,21 @@ function PatientTable() {
   setSelectedPatient(null);
  };
 
-   const handleDeletePatient = () => {
-   const updatedPatients = patients.filter(
+
+
+
+ const handleDeletePatient = () => {
+  const updatedPatients = patients.filter(
     (patient) => patient.id !== selectedPatient.id
   );
 
   setPatients(updatedPatients);
+
+  setSnackbar({
+    open: true,
+    message: "Patient deleted successfully.",
+    severity: "success",
+  });
 
   handleCloseDialog();
 };
@@ -92,25 +142,113 @@ function PatientTable() {
       {/* Search Bar */}
       <Box sx={{ p: 2 }}>
         <TextField
-          fullWidth
-          placeholder="Search patient by name..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
+        fullWidth
+        placeholder="Search by patient name..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        InputProps={{
+        startAdornment: (
+      <InputAdornment position="start">
+        <Search color="primary" />
+      </InputAdornment>
+     ),
+    }}
+         sx={{
+            "& .MuiOutlinedInput-root": {
+             borderRadius: 2,
+        },
+     }}
+   />
+</Box>
+
+
+{/* Filters */}
+<Box
+  display="flex"
+  gap={2}
+  px={2}
+  pb={2}
+  flexWrap="wrap"
+>
+  <TextField
+    select
+    label="Gender"
+    value={genderFilter}
+    onChange={(e) => setGenderFilter(e.target.value)}
+    sx={{ minWidth: 180 }}
+  >
+    <MenuItem value="">All</MenuItem>
+    <MenuItem value="Male">Male</MenuItem>
+    <MenuItem value="Female">Female</MenuItem>
+  </TextField>
+
+  <TextField
+    select
+    label="Status"
+    value={statusFilter}
+    onChange={(e) => setStatusFilter(e.target.value)}
+    sx={{ minWidth: 200 }}
+  >
+    <MenuItem value="">All</MenuItem>
+    <MenuItem value="Admitted">Admitted</MenuItem>
+    <MenuItem value="Discharged">Discharged</MenuItem>
+    <MenuItem value="Under Treatment">Under Treatment</MenuItem>
+  </TextField>
+
+  <TextField
+    select
+    label="Doctor"
+    value={doctorFilter}
+    onChange={(e) => setDoctorFilter(e.target.value)}
+    sx={{ minWidth: 220 }}
+  >
+    <MenuItem value="">All</MenuItem>
+    <MenuItem value="Dr. Amit">Dr. Amit</MenuItem>
+    <MenuItem value="Dr. Neha">Dr. Neha</MenuItem>
+    <MenuItem value="Dr. Raj">Dr. Raj</MenuItem>
+    <MenuItem value="Dr. Priya">Dr. Priya</MenuItem>
+    <MenuItem value="Dr. Shivangi Yadav">
+      Dr. Shivangi Yadav
+    </MenuItem>
+  </TextField>
+
+<Button
+  variant="outlined"
+  color="secondary"
+  sx={{
+    height: 56,
+  }}
+  onClick={() => {
+    setSearch("");
+    setGenderFilter("");
+    setStatusFilter("");
+    setDoctorFilter("");
+    setPage(0);
+  }}
+>
+  Reset Filters
+</Button>
+
+
+</Box>
+
+
+
+
+
+
+
+
 
       {/* Table */}
       <TableContainer>
         <Table>
 
-          <TableHead>
+          <TableHead
+            sx={{
+             backgroundColor: "#f5f5f5",
+             }}
+            >
             <TableRow>
               <TableCell><strong>ID</strong></TableCell>
               <TableCell><strong>Name</strong></TableCell>
@@ -126,8 +264,20 @@ function PatientTable() {
           </TableHead>
 
           <TableBody>
-            {filteredPatients.map((patient) => (
-              <TableRow key={patient.id} hover>
+            {filteredPatients
+            .slice( page * rowsPerPage,
+                 page * rowsPerPage + rowsPerPage
+                )
+                .map((patient) => (
+              <TableRow
+                       key={patient.id}
+                       hover
+                       sx={{
+                       "&:hover": {
+                       backgroundColor: "#fafafa",
+                    },
+                 }}
+               >
 
                 <TableCell>{patient.id}</TableCell>
 
@@ -199,6 +349,27 @@ function PatientTable() {
 
         </Table>
       </TableContainer>
+
+
+    <TablePagination
+       component="div"
+       count={filteredPatients.length}
+       page={page}
+       onPageChange={(event, newPage) => setPage(newPage)}
+       rowsPerPage={rowsPerPage}
+       onRowsPerPageChange={(event) => {
+           setRowsPerPage(parseInt(event.target.value, 10));
+           setPage(0);
+  }}
+  rowsPerPageOptions={[5, 10, 25]}
+/>
+
+
+
+
+
+
+
     </Paper>
 
 
@@ -248,6 +419,33 @@ function PatientTable() {
   </DialogActions>
 
 </Dialog>
+
+
+
+<Snackbar
+  open={snackbar.open}
+  autoHideDuration={3000}
+  onClose={() =>
+    setSnackbar({
+      ...snackbar,
+      open: false,
+    })
+  }
+  anchorOrigin={{
+    vertical: "bottom",
+    horizontal: "right",
+  }}
+>
+  <Alert
+    severity={snackbar.severity}
+    variant="filled"
+    sx={{ width: "100%" }}
+  >
+    {snackbar.message}
+  </Alert>
+</Snackbar>
+
+
 
 </>
 
