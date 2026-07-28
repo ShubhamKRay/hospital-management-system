@@ -51,6 +51,8 @@ function PatientTable() {
   const [statusFilter, setStatusFilter] = useState("");
   const [doctorFilter, setDoctorFilter] = useState("");
 
+  const [sortBy, setSortBy] = useState("");
+
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -68,7 +70,10 @@ function PatientTable() {
 
   const [patients, setPatients] = useState(patientData);
 
+
+
   const filteredPatients = patients.filter((patient) => {
+
   const matchSearch = patient.name
     .toLowerCase()
     .includes(search.toLowerCase());
@@ -91,6 +96,29 @@ function PatientTable() {
     matchStatus &&
     matchDoctor
   );
+});
+
+
+const sortedPatients = [...filteredPatients].sort((a, b) => {
+
+  if (sortBy === "nameAsc") {
+    return a.name.localeCompare(b.name);
+  }
+
+  if (sortBy === "nameDesc") {
+    return b.name.localeCompare(a.name);
+  }
+
+  if (sortBy === "ageAsc") {
+    return a.age - b.age;
+  }
+
+  if (sortBy === "ageDesc") {
+    return b.age - a.age;
+  }
+
+  return 0;
+
 });
 
 
@@ -212,6 +240,43 @@ function PatientTable() {
     </MenuItem>
   </TextField>
 
+
+<TextField
+  select
+  label="Sort By"
+  value={sortBy}
+  onChange={(e)=>{
+    setSortBy(e.target.value);
+    setPage(0);
+  }}
+  sx={{ minWidth:220 }}
+>
+
+<MenuItem value="">
+  Default
+</MenuItem>
+
+<MenuItem value="nameAsc">
+  Name A-Z
+</MenuItem>
+
+<MenuItem value="nameDesc">
+  Name Z-A
+</MenuItem>
+
+<MenuItem value="ageAsc">
+  Age Low - High
+</MenuItem>
+
+<MenuItem value="ageDesc">
+  Age High - Low
+</MenuItem>
+
+</TextField>
+
+
+
+
 <Button
   variant="outlined"
   color="secondary"
@@ -223,6 +288,7 @@ function PatientTable() {
     setGenderFilter("");
     setStatusFilter("");
     setDoctorFilter("");
+    setSortBy("");
     setPage(0);
   }}
 >
@@ -231,12 +297,6 @@ function PatientTable() {
 
 
 </Box>
-
-
-
-
-
-
 
 
 
@@ -264,8 +324,9 @@ function PatientTable() {
           </TableHead>
 
           <TableBody>
-            {filteredPatients
-            .slice( page * rowsPerPage,
+            {sortedPatients
+            .slice(
+                 page * rowsPerPage,
                  page * rowsPerPage + rowsPerPage
                 )
                 .map((patient) => (
@@ -337,7 +398,7 @@ function PatientTable() {
               </TableRow>
             ))}
 
-            {filteredPatients.length === 0 && (
+            {sortedPatients.length === 0 && (
               <TableRow>
                 <TableCell colSpan={8} align="center">
                   No patient found.
