@@ -231,9 +231,7 @@ const sortedPatients = [...filteredPatients].sort((a, b) => {
     <MenuItem value="Dr. Neha">Dr. Neha</MenuItem>
     <MenuItem value="Dr. Raj">Dr. Raj</MenuItem>
     <MenuItem value="Dr. Priya">Dr. Priya</MenuItem>
-    <MenuItem value="Dr. Shivangi Yadav">
-      Dr. Shivangi Yadav
-    </MenuItem>
+    <MenuItem value="Dr. Shivangi Yadav">Dr. Shivangi Yadav</MenuItem>
   </TextField>
 
 
