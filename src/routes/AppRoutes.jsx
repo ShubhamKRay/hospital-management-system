@@ -1,5 +1,3 @@
-
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Dashboard
@@ -18,6 +16,11 @@ import DoctorList from "../pages/doctors/DoctorList";
 import AddDoctor from "../pages/doctors/AddDoctor";
 import EditDoctor from "../pages/doctors/EditDoctor";
 import ViewDoctor from "../pages/doctors/ViewDoctor";
+
+import AppointmentList from "../pages/appointments/AppointmentList";
+import AddAppointment from "../pages/appointments/AddAppointment";
+import EditAppointment from "../pages/appointments/EditAppointment";
+import ViewAppointment from "../pages/appointments/ViewAppointment";
 
 function AppRoutes() {
   return (
@@ -40,6 +43,12 @@ function AppRoutes() {
         <Route path="/doctors/add" element={<AddDoctor />} />
         <Route path="/doctors/edit/:id" element={<EditDoctor />} />
         <Route path="/doctors/view/:id" element={<ViewDoctor />} />
+
+        {/*Appointments*/}
+        <Route path="/appointments" element={<AppointmentList />} />
+        <Route path="/appointments/add" element={<AddAppointment />} />
+        <Route path="/appointments/edit/:id" element={<EditAppointment />} />
+        <Route path="/appointments/view/:id" element={<ViewAppointment />} />
       </Routes>
     </BrowserRouter>
   );
