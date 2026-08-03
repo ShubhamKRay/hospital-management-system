@@ -5,6 +5,7 @@ import {
   Event,
   Apartment,
   LocalHospital,
+  Science,
   Medication,
   ReceiptLong,
   Settings,
@@ -38,7 +39,7 @@ const menuItems = [
   },
   {
     title: "Laboratory",
-    icon: LocalHospital,
+    icon: Science,
     path: "/laboratory",
   },
   {
